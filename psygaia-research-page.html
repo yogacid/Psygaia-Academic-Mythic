@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Psygaia Framework — Our Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300;1,8..60,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --forest:   #1b3a2c;
+    --moss:     #2e5c44;
+    --sage:     #5a8a6e;
+    --mist:     #a8c4b4;
+    --ivory:    #f5f0e6;
+    --parchment:#ede6d6;
+    --gold:     #b8973a;
+    --amber:    #d4a843;
+    --earth:    #6b4226;
+    --bark:     #3d2416;
+    --ink:      #1c2118;
+    --warm-gray:#8a8478;
+    --mode-academic: #1b3a2c;
+    --mode-mythic: #4a1f3d;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--ivory);
+    color: var(--ink);
+    line-height: 1.75;
+    font-size: 17px;
+    overflow-x: hidden;
+  }
+
+  /* ── TOGGLE SYSTEM ─────────────────────────── */
+  body.mythic-mode {
+    --forest: #3d1f5a;
+    --moss: #5a2d7a;
+    --sage: #8a6aaa;
+    --gold: #c08040;
+    --amber: #d4944a;
+  }
+
+  .mode-academic { display: block; }
+  .mode-mythic { display: none; }
+
+  body.mythic-mode .mode-academic { display: none; }
+  body.mythic-mode .mode-mythic { display: block; }
+
+  .inline-academic { }
+  .inline-mythic { display: none; }
+  body.mythic-mode .inline-academic { display: none; }
+  body.mythic-mode .inline-mythic { display: inline; }
+
+  /* ── STICKY TOGGLE BAR ─────────────────────── */
+  .toggle-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: var(--forest);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    height: 52px;
+    transition: background 0.6s ease;
+  }
+
+  body.mythic-mode .toggle-bar {
+    background: #2d1040;
+  }
+
+  .toggle-bar-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+  }
+
+  .toggle-control {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .toggle-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    transition: color 0.3s;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .toggle-label.active {
+    color: var(--amber);
+  }
+
+  .toggle-switch {
+    position: relative;
+    width: 52px;
+    height: 26px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 13px;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.2);
+    transition: background 0.3s;
+  }
+
+  .toggle-switch::after {
+    content: '';
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 18px; height: 18px;
+    background: var(--ivory);
+    border-radius: 50%;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  body.mythic-mode .toggle-switch::after {
+    transform: translateX(26px);
+  }
+
+  body.mythic-mode .toggle-switch {
+    background: rgba(180, 120, 220, 0.3);
+  }
+
+  .toggle-hint {
+    position: fixed;
+    top: 60px; right: 40px;
+    background: var(--forest);
+    color: var(--ivory);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    border-radius: 3px;
+    opacity: 0;
+    transition: opacity 0.5s;
+    pointer-events: none;
+    z-index: 99;
+  }
+
+  /* ── HERO ──────────────────────────────────── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 120px 10% 80px;
+    position: relative;
+    background: var(--forest);
+    overflow: hidden;
+  }
+
+  .hero-texture {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 70% 30%, rgba(90,138,110,0.15) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 80% at 20% 80%, rgba(184,151,58,0.08) 0%, transparent 60%);
+  }
+
+  .hero-rule {
+    width: 60px;
+    height: 1px;
+    background: var(--gold);
+    margin-bottom: 32px;
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--mist);
+    margin-bottom: 24px;
+  }
+
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(52px, 8vw, 96px);
+    font-weight: 300;
+    line-height: 1.0;
+    color: var(--ivory);
+    max-width: 780px;
+    margin-bottom: 32px;
+    letter-spacing: -0.01em;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--amber);
+  }
+
+  .hero-subtitle {
+    font-family: 'Source Serif 4', serif;
+    font-size: 19px;
+    font-weight: 300;
+    color: rgba(245,240,230,0.7);
+    max-width: 560px;
+    line-height: 1.65;
+    margin-bottom: 52px;
+  }
+
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 14px 28px;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+
+  .hero-cta:hover {
+    background: var(--gold);
+    color: var(--forest);
+  }
+
+  .hero-scroll-hint {
+    position: absolute;
+    bottom: 36px; left: 10%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: rgba(245,240,230,0.35);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .hero-scroll-line {
+    width: 40px;
+    height: 1px;
+    background: currentColor;
+  }
+
+  /* ── TOC ───────────────────────────────────── */
+  .toc-bar {
+    background: var(--parchment);
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    padding: 0 10%;
+    overflow-x: auto;
+  }
+
+  .toc-inner {
+    display: flex;
+    gap: 0;
+    min-width: max-content;
+  }
+
+  .toc-link {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--warm-gray);
+    text-decoration: none;
+    padding: 18px 20px;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .toc-link:hover {
+    color: var(--forest);
+    border-bottom-color: var(--gold);
+  }
+
+  /* ── INTRO STATEMENT ───────────────────────── */
+  .intro-statement {
+    padding: 100px 10%;
+    background: var(--ivory);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+
+  .intro-statement blockquote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(24px, 3.5vw, 38px);
+    font-weight: 300;
+    line-height: 1.45;
+    color: var(--forest);
+    max-width: 860px;
+    border-left: 3px solid var(--gold);
+    padding-left: 36px;
+  }
+
+  /* ── SECTION BASE ──────────────────────────── */
+  section {
+    padding: 90px 10%;
+  }
+
+  section:nth-child(even) {
+    background: var(--parchment);
+  }
+
+  .section-header {
+    margin-bottom: 60px;
+  }
+
+  .section-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 5vw, 58px);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+
+  .section-lead {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(19px, 2.5vw, 24px);
+    font-style: italic;
+    font-weight: 300;
+    color: var(--moss);
+    line-height: 1.55;
+    margin-top: 24px;
+    max-width: 720px;
+  }
+
+  .body-text {
+    max-width: 720px;
+    line-height: 1.8;
+  }
+
+  .body-text p {
+    margin-bottom: 1.5em;
+  }
+
+  .body-text p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ── DUAL-REGISTER BLOCKS ──────────────────── */
+  .register-block {
+    margin: 48px 0;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .register-block-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    display: inline-block;
+  }
+
+  .academic-block {
+    background: rgba(27,58,44,0.06);
+    border-left: 3px solid var(--forest);
+    padding: 28px 32px;
+  }
+
+  .academic-block .register-block-label {
+    color: var(--moss);
+    background: rgba(27,58,44,0.08);
+    margin: -28px -32px 20px;
+    display: block;
+  }
+
+  .mythic-block {
+    background: rgba(74,31,61,0.06);
+    border-left: 3px solid #7a3d6a;
+    padding: 28px 32px;
+  }
+
+  .mythic-block .register-block-label {
+    color: #7a3d6a;
+    background: rgba(74,31,61,0.08);
+    margin: -28px -32px 20px;
+    display: block;
+  }
+
+  .register-block p {
+    font-size: 16px;
+    line-height: 1.75;
+    margin: 0;
+  }
+
+  .academic-block p {
+    color: var(--forest);
+  }
+
+  .mythic-block p {
+    color: #4a1f3d;
+    font-style: italic;
+  }
+
+  /* ── TWO-COLUMN LAYOUT ─────────────────────── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+
+  .three-col {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    margin-top: 60px;
+  }
+
+  /* ── FRAMEWORK CARDS ───────────────────────── */
+  .framework-card {
+    padding: 36px;
+    background: var(--ivory);
+    border-top: 3px solid var(--gold);
+    position: relative;
+  }
+
+  .framework-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 36px;
+    font-weight: 300;
+    color: rgba(0,0,0,0.06);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .framework-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--forest);
+    margin-bottom: 8px;
+  }
+
+  .framework-scale {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .framework-desc {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #4a4a40;
+  }
+
+  /* ── MOTIF CARDS ───────────────────────────── */
+  .motif-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 60px;
+    background: rgba(0,0,0,0.06);
+  }
+
+  .motif-card {
+    background: var(--ivory);
+    padding: 40px 32px;
+  }
+
+  .motif-icon {
+    font-size: 28px;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .motif-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--forest);
+    margin-bottom: 12px;
+  }
+
+  .motif-academic {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #5a5a50;
+    margin-bottom: 16px;
+  }
+
+  .motif-mythic {
+    font-size: 14px;
+    font-style: italic;
+    line-height: 1.65;
+    color: #7a4a70;
+    border-top: 1px solid rgba(0,0,0,0.07);
+    padding-top: 14px;
+    margin-top: 14px;
+  }
+
+  /* ── PULLQUOTE ─────────────────────────────── */
+  .pullquote {
+    margin: 60px 0;
+    padding: 48px 0;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+  }
+
+  .pullquote blockquote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(22px, 3vw, 32px);
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1.45;
+    color: var(--forest);
+    max-width: 720px;
+  }
+
+  body.mythic-mode .pullquote blockquote {
+    color: #4a1f3d;
+  }
+
+  .pullquote cite {
+    display: block;
+    margin-top: 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--warm-gray);
+    font-style: normal;
+  }
+
+  /* ── DEFINITION BOX ────────────────────────── */
+  .definition-box {
+    background: var(--forest);
+    color: var(--ivory);
+    padding: 48px 52px;
+    margin: 52px 0;
+    position: relative;
+  }
+
+  .definition-box::before {
+    content: '"';
+    position: absolute;
+    top: 20px; left: 36px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 120px;
+    line-height: 1;
+    color: rgba(255,255,255,0.07);
+  }
+
+  .definition-box .def-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--mist);
+    margin-bottom: 16px;
+  }
+
+  .definition-box p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(18px, 2.5vw, 24px);
+    font-style: italic;
+    line-height: 1.55;
+    position: relative;
+  }
+
+  /* ── WARNING/ETHICS BOX ────────────────────── */
+  .ethics-box {
+    background: rgba(107,66,38,0.08);
+    border-left: 3px solid var(--earth);
+    padding: 28px 32px;
+    margin: 40px 0;
+  }
+
+  .ethics-box p {
+    font-size: 15.5px;
+    color: var(--bark);
+    line-height: 1.75;
+    margin: 0;
+  }
+
+  /* ── SURVEY CTA ────────────────────────────── */
+  .survey-cta {
+    background: var(--forest);
+    padding: 80px 10%;
+    text-align: center;
+  }
+
+  body.mythic-mode .survey-cta {
+    background: #2d1040;
+  }
+
+  .survey-cta h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 4vw, 46px);
+    font-weight: 300;
+    color: var(--ivory);
+    max-width: 680px;
+    margin: 0 auto 16px;
+    line-height: 1.3;
+  }
+
+  .survey-cta p {
+    color: rgba(245,240,230,0.65);
+    max-width: 500px;
+    margin: 0 auto 40px;
+    font-size: 16px;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--forest);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 16px 36px;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+
+  .btn-primary:hover {
+    background: var(--amber);
+    transform: translateY(-2px);
+  }
+
+  /* ── CAPTION ───────────────────────────────── */
+  .caption {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--warm-gray);
+    margin-top: 8px;
+  }
+
+  /* ── FOOTNOTE ──────────────────────────────── */
+  .footnote {
+    font-size: 14px;
+    color: var(--warm-gray);
+    border-top: 1px solid rgba(0,0,0,0.08);
+    padding-top: 16px;
+    margin-top: 48px;
+    font-style: italic;
+  }
+
+  /* ── CLOSING ───────────────────────────────── */
+  .closing {
+    background: var(--ink);
+    padding: 100px 10%;
+    color: rgba(245,240,230,0.75);
+  }
+
+  .closing h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 5vw, 58px);
+    font-weight: 300;
+    color: var(--ivory);
+    margin-bottom: 32px;
+    max-width: 720px;
+    line-height: 1.15;
+  }
+
+  .closing p {
+    max-width: 660px;
+    line-height: 1.8;
+    margin-bottom: 1.5em;
+  }
+
+  .closing a {
+    color: var(--amber);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(212, 168, 67, 0.4);
+  }
+
+  .closing-links {
+    display: flex;
+    gap: 24px;
+    margin-top: 48px;
+    flex-wrap: wrap;
+  }
+
+  .btn-ghost {
+    display: inline-block;
+    border: 1px solid rgba(245,240,230,0.3);
+    color: rgba(245,240,230,0.75);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 14px 28px;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--amber);
+    color: var(--amber);
+  }
+
+  /* ── RESPONSIVE ────────────────────────────── */
+  @media (max-width: 860px) {
+    .two-col, .three-col, .motif-grid { grid-template-columns: 1fr; }
+    section { padding: 70px 6%; }
+    .hero { padding: 100px 6% 70px; }
+    .toggle-bar { padding: 0 20px; }
+    .toc-bar { padding: 0 6%; }
+  }
+
+  /* ── FADE IN ───────────────────────────────── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero h1, .hero-subtitle, .hero-cta {
+    animation: fadeUp 0.8s ease both;
+  }
+  .hero-subtitle { animation-delay: 0.15s; }
+  .hero-cta { animation-delay: 0.3s; }
+
+  /* ── TRANSITION on mode change ─────────────── */
+  .register-block, .toggle-bar, .pullquote blockquote,
+  .framework-title, .section-lead {
+    transition: all 0.5s ease;
+  }
+
+  /* ── THESIS BADGE ──────────────────────────── */
+  .thesis-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(27,58,44,0.08);
+    border: 1px solid rgba(27,58,44,0.15);
+    padding: 10px 18px;
+    margin-top: 40px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--moss);
+    text-transform: uppercase;
+  }
+
+  .thesis-badge a {
+    color: var(--gold);
+    text-decoration: none;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- ── STICKY TOGGLE BAR ───────────────────────── -->
+<div class="toggle-bar" id="toggleBar">
+  <span class="toggle-bar-brand">Psygaia · Research</span>
+  <div class="toggle-control">
+    <span class="toggle-label active" id="labelAcademic">Academic</span>
+    <div class="toggle-switch" id="toggleSwitch" onclick="toggleMode()" role="switch" aria-checked="false" tabindex="0"></div>
+    <span class="toggle-label" id="labelMythic">Mythic</span>
+  </div>
+</div>
+
+<!-- ── HERO ────────────────────────────────────── -->
+<header class="hero" id="top">
+  <div class="hero-texture"></div>
+  <div class="hero-rule"></div>
+  <p class="hero-eyebrow">Psygaia Framework · University of Ottawa · 2025</p>
+  <h1>The <em>Psygaia</em><br>Framework</h1>
+  <p class="hero-subtitle">An ecological systems view of how psychedelics reorganize human cognition toward <span class="inline-academic">ecological attunement</span><span class="inline-mythic">belonging within the living Earth</span>.</p>
+  <a href="https://jrladsyio8c.typeform.com/to/mE1Uh9pR" class="hero-cta">Take Our Survey →</a>
+  <div class="hero-scroll-hint"><div class="hero-scroll-line"></div>Scroll to explore</div>
+</header>
+
+<!-- ── TOC ─────────────────────────────────────── -->
+<nav class="toc-bar">
+  <div class="toc-inner">
+    <a class="toc-link" href="#overview">Overview</a>
+    <a class="toc-link" href="#disconnection">Disconnection Crisis</a>
+    <a class="toc-link" href="#frameworks">Three Frameworks</a>
+    <a class="toc-link" href="#motifs">Phenomenology</a>
+    <a class="toc-link" href="#practice">Practice & Ethics</a>
+    <a class="toc-link" href="#directions">Future Directions</a>
+  </div>
+</nav>
+
+<!-- ── INTRO STATEMENT ─────────────────────────── -->
+<div class="intro-statement">
+  <div class="mode-academic">
+    <blockquote>Psychedelic experiences may reorganize cognition in ways that render ecological interdependence perceptually and affectively salient — not through mystical revelation, but through altered organism-environment coupling, embodied sense-making, and enhanced semiotic sensitivity.</blockquote>
+  </div>
+  <div class="mode-mythic">
+    <blockquote>Life has always been communicating. Modernity severed our capacity to listen. Psychedelics reopen the channel — not by adding something foreign, but by dissolving the noise that separates us from a conversation we were always part of.</blockquote>
+  </div>
+  <div class="thesis-badge">
+    📄 Grounded in peer-reviewed research &amp; interdisciplinary thesis — University of Ottawa, 2025 &nbsp;·&nbsp; <a href="#">Read the full paper →</a>
+  </div>
+</div>
+
+<!-- ── OVERVIEW ────────────────────────────────── -->
+<section id="overview">
+  <div class="section-header">
+    <span class="section-num">01 · Overview</span>
+    <h2 class="section-title">What is<br>Psygaia?</h2>
+    <p class="section-lead mode-academic">An integrative theoretical framework situating psychedelics within ecological, cognitive, and semiotic systems — moving beyond both neurocentric reductionism and metaphysical speculation.</p>
+    <p class="section-lead mode-mythic">A framework for understanding what has always been known: that plant and fungal allies carry intelligence, and that human minds, when opened by them, remember their place within the living web.</p>
+  </div>
+
+  <div class="two-col">
+    <div class="body-text">
+      <p>The Psygaia Framework proposes that naturally occurring serotonergic psychedelics — psilocybin, DMT, mescaline, ayahuasca — are not simply neuropharmacological agents acting on an isolated brain. They are <strong>ecological molecules</strong>: chemical expressions of living organisms participating in the broader networks of life.</p>
+
+      <p>The framework draws on three established theoretical traditions — systems and Gaia theory, enactive cognition, and biosemiotics — to explain how psychedelic experiences consistently give rise to what we call <em>ecological attunement</em>: a felt, embodied recognition of interdependence within living systems.</p>
+
+      <p>This is not a claim that mushrooms are sentient teachers or that forests send encoded messages. It is a claim that these compounds temporarily reorganize the cognitive filters through which humans construct their world — and that what emerges, when those filters loosen, is a more relational and ecologically embedded perception of reality.</p>
+
+      <div class="register-block mode-academic">
+        <div class="academic-block">
+          <span class="register-block-label">Academic framing</span>
+          <p>Psygaia conceptualizes psychedelic experience ecologically rather than neurally: as a reconfiguration of organism-environment coupling and participatory sense-making, mediated by biosemiotic modulation, that renders relational dimensions of life experientially vivid. The model neither validates psychedelic phenomenology as metaphysical truth nor reduces it to neural artifact.</p>
+        </div>
+      </div>
+
+      <div class="register-block mode-mythic">
+        <div class="mythic-block">
+          <span class="register-block-label">Mythic framing</span>
+          <p>We are not separate from the Earth looking at it. We are an expression of it, briefly remembering. Psygaia names the conditions under which that remembering becomes possible — and the cultural work required to make it last.</p>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="definition-box">
+        <div class="def-label">Core Definition</div>
+        <p class="mode-academic">Ecological attunement: the embodied and enacted recognition of interdependence within ecological systems, in which interdependence becomes perceptually and affectively salient and action-guiding, rather than merely intellectually acknowledged.</p>
+        <p class="mode-mythic">Ecological attunement: the felt remembrance of belonging — not to a concept, but to the living field from which self and world are never truly separate.</p>
+      </div>
+
+      <div class="ethics-box">
+        <p><strong>A crucial caveat:</strong> psychedelic experiences do not guarantee ecological integration. Without cultural containers, relational ethics, and collective practice, altered cognition tends to be reabsorbed into the same anthropocentric structures it temporarily dissolved. The molecule reveals. Culture determines what we do with what is revealed.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── DISCONNECTION ────────────────────────────── -->
+<section id="disconnection">
+  <div class="section-header">
+    <span class="section-num">02 · The Disconnection Crisis</span>
+    <h2 class="section-title">A Crisis of<br>Perception</h2>
+    <p class="section-lead mode-academic">The planetary health crisis reflects not only ecological disruption but a fundamental rupture in human-Nature relations — shaped by ontological, epistemic, and cultural frameworks that render interdependence imperceptible.</p>
+    <p class="section-lead mode-mythic">We did not fall out of love with the Earth all at once. The severing happened slowly — through philosophies, economies, and built environments designed to make us feel that we are observers of nature rather than participants within it.</p>
+  </div>
+
+  <div class="body-text">
+    <p>We are living through an unprecedented convergence of crises: ecological destabilization, biodiversity collapse, a sixth mass extinction, alongside a parallel crisis of rising psychological distress, loss of meaning, and political fragmentation. These are not isolated problems. They are interconnected expressions of a deeper rupture in how modern humans perceive and participate in the systems that sustain life.</p>
+
+    <p>This rupture has roots. Descartes' separation of mind and matter. The scientific revolution's evacuation of quality from nature. Colonial worldviews that framed living landscapes as resources to extract. Industrial capitalism's logic of endless growth. Over centuries, these forces built a shared perceptual habit: the sense that humans are separate from — and above — the living world.</p>
+
+    <p>Ecopsychologists call this <em>ecological disattunement</em>. Systems thinkers call it a "crisis of perception." Indigenous scholars describe it as the loss of awareness of the interconnectedness that exists within Nature — a fragmented identity that enables the projection of predatory impulses onto the environment. The ecological crisis, at its root, is a crisis of identity.</p>
+  </div>
+
+  <div class="pullquote">
+    <blockquote class="mode-academic">"If the self is expanded to include the natural world, behaviour leading to destruction of the world will be experienced as self-destruction."
+      <cite>— Roszak et al., Ecopsychology (1995)</cite>
+    </blockquote>
+    <blockquote class="mode-mythic">"The major problems in the world are the result of the difference between how nature works and the way people think."
+      <cite>— Gregory Bateson</cite>
+    </blockquote>
+  </div>
+
+  <div class="body-text">
+    <p>Contemporary modeling suggests this pattern has crossed a systemic tipping point: urbanization and the intergenerational loss of nature-experience have locked in a persistent "extinction of experience" — each generation growing up with less direct contact with the living world than the last, and with diminished cognitive capacity to even notice the loss.</p>
+
+    <p>It is within this context that we must understand the psychedelic renaissance. These substances are re-emerging at precisely the historical moment when their core phenomenological effects — dissolution of self-world boundaries, intensified perception of aliveness, insights into interdependence — are most culturally needed. Whether they can help is the question Psygaia takes seriously.</p>
+  </div>
+</section>
+
+<!-- ── SURVEY CTA (mid-page) ───────────────────── -->
+<div class="survey-cta">
+  <h3>Why do some mushrooms and plants occasion experiences of profound interconnection?</h3>
+  <p>Your experience matters. Help us deepen our understanding by participating in our ongoing survey.</p>
+  <a href="https://jrladsyio8c.typeform.com/to/mE1Uh9pR" class="btn-primary">Take the Survey</a>
+</div>
+
+<!-- ── THREE FRAMEWORKS ────────────────────────── -->
+<section id="frameworks">
+  <div class="section-header">
+    <span class="section-num">03 · Theoretical Foundations</span>
+    <h2 class="section-title">Three<br>Frameworks</h2>
+    <p class="section-lead mode-academic">Psygaia integrates three complementary systems-oriented frameworks across macro, meso, and micro scales to situate psychedelic experience within ecological processes — without recourse to metaphysical speculation.</p>
+    <p class="section-lead mode-mythic">To explain what the experience reveals, we need languages that honor both the science and the mystery. These three frameworks provide the grammar.</p>
+  </div>
+
+  <div class="three-col">
+    <div class="framework-card">
+      <div class="framework-num">01</div>
+      <div class="framework-scale">Macro Scale · Planetary</div>
+      <div class="framework-title">Systems &amp; Gaia Theory</div>
+      <p class="framework-desc mode-academic">Earth as a self-organizing, self-regulating system of nested feedback loops. Human cognition is not external to this system — it is an emergent property through which Earth's processes become reflexively processed. Psychedelic experiences of "feeling part of the Earth" can be interpreted as momentary encounters with systemic embeddedness.</p>
+      <p class="framework-desc mode-mythic">The Earth is not a collection of resources. It is a living process — a self-organizing system that has maintained conditions for life across billions of years. Gaia is not a goddess to worship; she is the pattern that holds. Psychedelics remind the body of this pattern.</p>
+    </div>
+
+    <div class="framework-card">
+      <div class="framework-num">02</div>
+      <div class="framework-scale">Meso Scale · Organism</div>
+      <div class="framework-title">Enactive Cognition</div>
+      <p class="framework-desc mode-academic">Cognition is not computation inside a skull. It is organism-environment coupling — embodied sense-making through which organisms bring forth meaningful worlds. Psychedelics reconfigure this coupling: loosening rigid top-down predictions, allowing relational patterns ordinarily backgrounded to become experientially vivid. Experiences of "unity" reflect the groundlessness of habitual ego-centered perception.</p>
+      <p class="framework-desc mode-mythic">You are not a mind looking at the world through windows of the senses. You are a process woven into the world, constantly co-creating it. Psychedelics loosen the habits of perception that make you forget this — and for a time, the world enacts you differently.</p>
+    </div>
+
+    <div class="framework-card">
+      <div class="framework-num">03</div>
+      <div class="framework-scale">Micro Scale · Chemical</div>
+      <div class="framework-title">Biosemiotics</div>
+      <p class="framework-desc mode-academic">Living systems navigate their environments through the interpretation of chemical and behavioral signs. Psychedelic molecules — products of fungi and plants shaped by evolutionary ecology — function as biosemiotic modulators: they dramatically expand the range of environmental signals that register as meaningful, shifting salience from ego-centered content toward relational and systemic patterns.</p>
+      <p class="framework-desc mode-mythic">The living world is saturated with signals. Plants warn each other through airborne chemistry. Fungi coordinate forests through underground networks. These are not metaphors — they are the actual language of life. Psychedelics make human organisms temporarily fluent in that language.</p>
+    </div>
+  </div>
+
+  <div class="pullquote" style="margin-top: 72px;">
+    <blockquote class="mode-academic">The information in a psychedelic experience "does not belong to the psychedelic molecule" but to "the coupling of the psychedelic molecule with the structure of the autonomous system." What counts as information depends on the organism's body, history, needs, and ongoing structural interactions.
+      <cite>— Meling &amp; Scheidegger, Frontiers in Psychology (2023)</cite>
+    </blockquote>
+    <blockquote class="mode-mythic">Psychedelics are not messages from another world. They are enzymes that digest the walls between this one and the one we always already inhabit — the relational, animate world that was here long before we decided it wasn't.
+      <cite>— Psygaia, Mythic Narrative</cite>
+    </blockquote>
+  </div>
+
+  <div class="body-text" style="margin-top: 32px;">
+    <p><strong>The Psygaia Synthesis:</strong> together, these three frameworks offer a multi-scalar account of how psychedelic compounds temporarily reorganize sense-making — from planetary feedback to bodily coupling to the chemistry of signaling — in ways that render relational and ecological dimensions of life experientially salient. The psychedelic experience is not a hallucination departing from reality. It is an altered mode of coupling with reality, one that foregrounds dimensions ordinarily filtered by habitual ego-centered perception.</p>
+  </div>
+</section>
+
+<!-- ── PHENOMENOLOGY ────────────────────────────── -->
+<section id="motifs">
+  <div class="section-header">
+    <span class="section-num">04 · Phenomenological Structures</span>
+    <h2 class="section-title">What People<br>Experience</h2>
+    <p class="section-lead mode-academic">Qualitative and clinical studies converge on three recurring ecological motifs in psychedelic phenomenology — patterns that the Psygaia framework interprets as expressions of altered organism-environment coupling and enhanced semiotic sensitivity.</p>
+    <p class="section-lead mode-mythic">Across cultures, across substances, across centuries — certain experiences keep returning. Not because substances force them, but because they are latent in any mind that relaxes its grip on separation.</p>
+  </div>
+
+  <div class="motif-grid">
+    <div class="motif-card">
+      <span class="motif-icon">◯</span>
+      <div class="motif-title">Boundary Dissolution &amp; Self-Transcendence</div>
+      <p class="motif-academic mode-academic">The temporary loosening of habitual perceptual boundaries between self and world. Participants describe "merging" with their surroundings, the boundary between self and environment dissolving, identity expanding beyond the individual. Clinically associated with mystical-type experiences that predict therapeutic outcomes. Interpreted as experiential contact with the "groundlessness" of ego-centered perception — not its annihilation, but the revelation of its constructed nature.</p>
+      <p class="motif-mythic mode-mythic">The wall dissolves. Not into nothing — into everything. You do not cease to exist; you discover that your existence was never as enclosed as it seemed. The forest is not outside you. You are a knot in the forest, temporarily loosened.</p>
+    </div>
+
+    <div class="motif-card">
+      <span class="motif-icon">✦</span>
+      <div class="motif-title">Aliveness &amp; Animacy</div>
+      <p class="motif-academic mode-academic">Intensified perception of the more-than-human world as alive, responsive, or communicative. Trees, rivers, landscapes appear vibrantly present. Biosemiotically interpreted as expanded semiotic sensitivity — more environmental signals become perceptually and affectively salient. The world does not become something it wasn't; the organism's capacity to interpret it broadens. Associated with increased biophilia and pro-environmental attitudes.</p>
+      <p class="motif-mythic mode-mythic">The world wakes up — or rather, you do. The tree has been breathing all along. The river has been moving with purpose all along. The soil has been alive all along. Something in you, something very old, recognizes this, and is relieved.</p>
+    </div>
+
+    <div class="motif-card">
+      <span class="motif-icon">∞</span>
+      <div class="motif-title">Interdependence &amp; Ecological Embeddedness</div>
+      <p class="motif-academic mode-academic">Affectively charged insights into systemic interconnection — experienced not as abstract propositions but as embodied recognitions, often accompanied by awe, grief, gratitude, or moral responsibility. Phrases like "everything is connected" or "my actions ripple outward" are reported not as ideas but as felt apprehensions. Interpreted as temporary perception of the systemic organization that ecological and systems theory describe. Associated with sustained increases in pro-environmental behavior.</p>
+      <p class="motif-mythic mode-mythic">You become the forest, then its roots, then the organisms within them. You feel the earth's grief at what is being done to it. You understand — not intellectually, but in your bones — that harming the world is harming yourself. This is not a metaphor. It is the oldest truth.</p>
+    </div>
+  </div>
+
+  <div class="body-text" style="margin-top: 52px;">
+    <p>A growing body of empirical research supports these accounts. Studies consistently find that psychedelic experiences predict increases in nature-relatedness, pro-environmental attitudes, and ecological concern — effects mediated specifically by ego-dissolution and mystical-type experience rather than by drug use per se. Natural settings amplify these effects. The relationship is directional but not deterministic: set, setting, and cultural context shape what the experience becomes.</p>
+
+    <div class="register-block mode-academic">
+      <div class="academic-block">
+        <span class="register-block-label">Research summary</span>
+        <p>Key findings: Forstmann &amp; Sagioglou (2017) found lifetime psychedelic use predicts greater nature-relatedness, mediated by self-transcendent experience. Kettner et al. (2019) found significant increases in nature-relatedness persisting at two-year follow-up. Lyons &amp; Carhart-Harris (2018) found psilocybin-assisted therapy increased nature-relatedness alongside wellbeing improvements. Forstmann &amp; Sagioglou (2025) demonstrate that nature-based settings amplify and prolong these effects.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRACTICE & ETHICS ────────────────────────── -->
+<section id="practice">
+  <div class="section-header">
+    <span class="section-num">05 · Practice &amp; Ethics</span>
+    <h2 class="section-title">Grounding the<br>Experience</h2>
+    <p class="section-lead mode-academic">Ecological attunement does not automatically yield ecological ethics. The transition from transient insight to durable transformation requires cultural containers, social scaffolding, and structural change — and demands critical engagement with the forces shaping the psychedelic industry.</p>
+    <p class="section-lead mode-mythic">The medicine reveals. Culture determines whether that revelation becomes service or narcissism. Without roots, the vision has nowhere to land.</p>
+  </div>
+
+  <div class="two-col">
+    <div class="body-text">
+      <p>Contemporary psychedelic therapy operates largely within biomedical and commercial frameworks that conceptualize distress as intrapsychic and aim for standardized, scalable outcomes. When healing is defined as individual symptom reduction, the relational and ecological dimensions of psychedelic experience — the dimensions that most consistently mediate therapeutic change — are systematically marginalized.</p>
+
+      <p>Ecological medicine offers a different paradigm: health as an emergent property of reciprocal participation in relational systems — bodily, social, ecological. In this view, the connectedness consistently produced by psychedelic experiences is not an ancillary benefit but a primary indicator of restored health. What appears clinically as symptom relief may reflect something deeper: a reorganization of how an individual participates in the relational networks that sustain life.</p>
+
+      <p>Traditional Indigenous ceremonial contexts — Mazatec mushroom ceremonies, Shipibo ayahuasca rituals, Huichol peyote rites — demonstrate that psychedelics can be embedded within ethical frameworks of reciprocity, place-based responsibility, and relational accountability. These traditions do not offer templates to replicate, but orientations to learn from: that healing is not a private event but a reorganization of participation in community and cosmos.</p>
+
+      <div class="ethics-box">
+        <p><strong>On romanticization and appropriation:</strong> Indigenous ceremonial traditions are internally diverse, historically dynamic, and embedded in specific cosmologies and territorial relations. They must be approached as epistemic examples requiring humility — not resources for extraction. Contemporary psychedelic discourse often reproduces the same idealization and appropriation it claims to heal. Indigenous sovereignty, cultural survival, and political struggle are inseparable from these practices.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="definition-box" style="margin-top: 0;">
+        <div class="def-label">On Cultural Scaffolding</div>
+        <p class="mode-academic">Altered cognition unintegrated within cultural, relational, and ethical frameworks tends to be reabsorbed into pre-existing worldviews — including anthropocentric, consumerist, or even right-wing ones. The trajectory of interconnection is shaped not by the molecule alone but by the meaning-making structures into which the experience is received.</p>
+        <p class="mode-mythic">The experience opens a door. What walks through it depends entirely on the culture waiting on the other side. A society that offers no story of belonging will convert the vision of unity into another consumer product — and the rupture will deepen.</p>
+      </div>
+
+      <div class="body-text" style="margin-top: 32px;">
+        <p>Narrative matters too. Psychedelic experiences are inherently meaning-generating events. They disrupt established self-concepts, reinterpret relationships, and open the possibility of ecological belonging as something felt rather than conceptualized. This is what we call <em>narrative repair</em> — the reconstruction of stories that align personal experience with life's relational constitution.</p>
+        <p>But this must be pursued with critical grounding. The point is not to substitute depleted cosmologies with romanticized ones. As Robin Kimmerer notes, an immigrant culture must write its own new stories of relationship to place — tempered by the wisdom of those who knew the land long before.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FUTURE DIRECTIONS ────────────────────────── -->
+<section id="directions">
+  <div class="section-header">
+    <span class="section-num">06 · Future Directions</span>
+    <h2 class="section-title">What Comes<br>Next</h2>
+    <p class="section-lead mode-academic">The Psygaia framework opens specific avenues for empirical research, theoretical development, and ethical practice — organized around the relationship between psychedelic experience, ecological context, and cognitive transformation.</p>
+    <p class="section-lead mode-mythic">The framework is a beginning, not an answer. The most important work is still ahead — and it belongs to communities, not clinics.</p>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <div class="body-text">
+        <p><strong>Nature-based psychedelic research.</strong> Evidence suggests that natural settings amplify and prolong increases in nature-relatedness. Future controlled studies should compare psychedelic experiences in ecological versus clinical environments, using active controls like forest bathing to isolate psychedelic-specific contributions. Psygaia predicts that richer ecological contexts will produce stronger and more durable ecological attunement.</p>
+
+        <p><strong>Longitudinal integration studies.</strong> Current research relies heavily on short-term follow-ups. Longitudinal mixed-method studies embedded within contemplative, ecological, or community-based practices could clarify how relational insights persist, consolidate, or attenuate as individuals return to disconnected sociocultural environments.</p>
+
+        <p><strong>Cognitive symbiosis as a research horizon.</strong> Once humans began ingesting psychedelic-producing organisms, new feedback dynamics emerged: humans cultivate, protect, and disperse these species; the organisms, in turn, modulate human cognition in ways associated with wellbeing, creativity, empathy, and ecological concern. This mutually adaptive relationship — <em>cognitive symbiosis</em> — warrants serious interdisciplinary investigation.</p>
+
+        <p><strong>Cross-cultural and Indigenous-governed inquiry.</strong> Research must engage with how differing ontological orientations shape the integration of psychedelic insight. This requires Indigenous governance, ethical safeguards, and a commitment to epistemic humility — acknowledging that Western scientific frameworks cannot be the sole lens through which these experiences are interpreted.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="body-text">
+        <p><strong>Ecological medicine integration.</strong> If connectedness consistently mediates therapeutic outcomes, clinical protocols must begin reflecting this. Preparation and integration practices should explicitly engage ecological awareness: grief rituals for ecological loss, land-based practices, commitments to environmental stewardship. Healing, in this view, is not an isolated event but a reconnection with the living web.</p>
+
+        <p><strong>The ritual absence question.</strong> Many societies have historically maintained ritually structured practices for periodic ego-loosening and relational recalibration — rites of passage, vision quests, ceremonial intoxication. Contemporary industrial culture has largely abandoned these without replacement. This may constitute a structural cognitive imbalance that reinforces ego-centered, anthropocentric modes of participation. Psychedelic experiences reveal what this absence costs — and what restoring such practices might offer.</p>
+
+        <div class="register-block mode-mythic">
+          <div class="mythic-block">
+            <span class="register-block-label">Mythic horizon</span>
+            <p>What Psygaia ultimately points toward is not a treatment protocol but a civilizational reorientation. A culture that honors the intelligence of the living world. That embeds healing within reciprocity. That treats the Earth not as a standing reserve but as the ground of all meaning. Psychedelics will not deliver this alone. But they may help make it conceivable — and conceivability is where every change begins.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CLOSING ──────────────────────────────────── -->
+<div class="closing">
+  <h2>Psychedelics may briefly mend a historical rupture — without abolishing science or reinstating literal cosmologies.</h2>
+  <p>They momentarily restore a mode of participation in which value and vitality are again encountered as intrinsic to the living world. The phenomenology echoes an intuition shared across cultures: that humans live within an animate world dense with meaning — and that this meaning arises not within an isolated human mind, but through ongoing relational participation in complex living systems.</p>
+  <p>The enduring task lies beyond the experience. Translating transient insights into durable forms of responsibility and care. The challenge that follows is collective, multigenerational, and relational — and that is the work Psygaia exists to support.</p>
+  <p><a href="/contact">Get in touch to discuss the framework</a>, join the research, or participate in our community.</p>
+  <div class="closing-links">
+    <a class="btn-ghost" href="https://jrladsyio8c.typeform.com/to/mE1Uh9pR">Take Our Survey</a>
+    <a class="btn-ghost" href="/psygaia-psychedelic-community">Join the Circle</a>
+    <a class="btn-ghost" href="/contact">Contact Us</a>
+  </div>
+</div>
+
+<!-- ── SCRIPT ────────────────────────────────────── -->
+<script>
+  function toggleMode() {
+    const body = document.body;
+    const isCurrentlyMythic = body.classList.contains('mythic-mode');
+
+    if (isCurrentlyMythic) {
+      body.classList.remove('mythic-mode');
+      document.getElementById('labelAcademic').classList.add('active');
+      document.getElementById('labelMythic').classList.remove('active');
+      document.getElementById('toggleSwitch').setAttribute('aria-checked', 'false');
+      showHint('Academic mode — peer-reviewed, systems-based');
+    } else {
+      body.classList.add('mythic-mode');
+      document.getElementById('labelMythic').classList.add('active');
+      document.getElementById('labelAcademic').classList.remove('active');
+      document.getElementById('toggleSwitch').setAttribute('aria-checked', 'true');
+      showHint('Mythic mode — archetypal, orienting, bold');
+    }
+  }
+
+  function showHint(msg) {
+    let hint = document.getElementById('modeHint');
+    if (!hint) {
+      hint = document.createElement('div');
+      hint.id = 'modeHint';
+      hint.className = 'toggle-hint';
+      document.body.appendChild(hint);
+    }
+    hint.textContent = msg;
+    hint.style.opacity = '1';
+    setTimeout(() => { hint.style.opacity = '0'; }, 2200);
+  }
+
+  // Keyboard support
+  document.getElementById('toggleSwitch').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleMode(); }
+  });
+
+  // Allow clicking the labels too
+  document.getElementById('labelAcademic').addEventListener('click', function() {
+    if (document.body.classList.contains('mythic-mode')) toggleMode();
+  });
+  document.getElementById('labelMythic').addEventListener('click', function() {
+    if (!document.body.classList.contains('mythic-mode')) toggleMode();
+  });
+</script>
+
+</body>
+</html>

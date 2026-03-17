@@ -231,7 +231,9 @@
     display: inline-flex;
     align-items: center;
     gap: 12px;
-    background: transparent;
+    background: linear-gradient(135deg, #3a9688 0%, #58a870 50%, #3a9688 100%);
+    background-size: 300% 100%;
+    background-position: 200% center;
     border: 1px solid var(--gold);
     color: var(--gold);
     font-family: 'DM Mono', monospace;
@@ -240,15 +242,13 @@
     text-transform: uppercase;
     padding: 14px 28px;
     text-decoration: none;
-    transition: all 0.3s;
+    transition: background-position 0.6s ease, color 0.3s, border-color 0.3s, box-shadow 0.3s;
   }
 
   .hero-cta:hover {
-    background: linear-gradient(135deg, #3a9688 0%, #58a870 50%, #3a9688 100%);
-    background-size: 300% 100%;
+    background-position: 0% center;
     color: var(--forest);
     border-color: transparent;
-    animation: accentShimmer 4s ease-in-out infinite;
     box-shadow: 0 0 0 3px rgba(58,150,136,0.2), 0 0 20px rgba(88,168,112,0.25);
   }
 
@@ -675,7 +675,7 @@
     display: inline-block;
     background: linear-gradient(135deg, #3a9688 0%, #58a870 50%, #3a9688 100%);
     background-size: 300% 100%;
-    background-position: 0% center;
+    background-position: 200% center;
     color: var(--forest);
     font-family: 'DM Mono', monospace;
     font-size: 11px;
@@ -683,11 +683,11 @@
     text-transform: uppercase;
     padding: 16px 36px;
     text-decoration: none;
-    transition: box-shadow 0.25s ease;
+    transition: background-position 0.6s ease, box-shadow 0.3s ease;
   }
 
   .btn-primary:hover {
-    animation: accentShimmer 4s ease-in-out infinite;
+    background-position: 0% center;
     box-shadow: 0 0 0 3px rgba(58,150,136,0.2), 0 0 22px rgba(88,168,112,0.3);
   }
 
@@ -824,9 +824,101 @@
     text-decoration: none;
   }
 
+  /* ── SECTION DOTS NAV ───────────────────────── */
+  .section-dots {
+    position: fixed;
+    left: 28px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    pointer-events: none;
+  }
+
+  @media (max-width: 900px) {
+    .section-dots { display: none; }
+  }
+
+  .section-dot-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    pointer-events: all;
+    cursor: pointer;
+  }
+
+  .section-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    border: 1.5px solid var(--sage);
+    background: transparent;
+    transition: background 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+    flex-shrink: 0;
+  }
+
+  .section-dot-item.active .section-dot {
+    background: var(--sage);
+    transform: scale(1.45);
+    border-color: var(--sage);
+  }
+
+  .section-dot-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--warm-gray);
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateX(-6px);
+    transition: opacity 0.25s ease, transform 0.25s ease, color 0.25s ease;
+    pointer-events: none;
+  }
+
+  .section-dot-item:hover .section-dot-label,
+  .section-dot-item.active .section-dot-label {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .section-dot-item.active .section-dot-label {
+    color: var(--sage);
+  }
+
 </style>
 </head>
 <body>
+
+<!-- ── SECTION DOTS NAV ───────────────────────── -->
+<nav class="section-dots" id="sectionDots" aria-label="Page sections">
+  <div class="section-dot-item" data-section="overview">
+    <div class="section-dot"></div>
+    <span class="section-dot-label">Overview</span>
+  </div>
+  <div class="section-dot-item" data-section="disconnection">
+    <div class="section-dot"></div>
+    <span class="section-dot-label">The Crisis</span>
+  </div>
+  <div class="section-dot-item" data-section="frameworks">
+    <div class="section-dot"></div>
+    <span class="section-dot-label">Three Frameworks</span>
+  </div>
+  <div class="section-dot-item" data-section="motifs">
+    <div class="section-dot"></div>
+    <span class="section-dot-label">Phenomenology</span>
+  </div>
+  <div class="section-dot-item" data-section="practice">
+    <div class="section-dot"></div>
+    <span class="section-dot-label">Practice & Ethics</span>
+  </div>
+  <div class="section-dot-item" data-section="directions">
+    <div class="section-dot"></div>
+    <span class="section-dot-label">Future Directions</span>
+  </div>
+</nav>
 
 <!-- ── STICKY TOGGLE BAR ───────────────────────── -->
 <div class="toggle-bar" id="toggleBar">
@@ -1188,6 +1280,44 @@
   document.getElementById('labelMythic').addEventListener('click', function() {
     if (!document.body.classList.contains('mythic-mode')) toggleMode();
   });
+
+  // ── SECTION DOTS ─────────────────────────────
+  (function() {
+    const sectionIds = ['overview','disconnection','frameworks','motifs','practice','directions'];
+    const dotItems = document.querySelectorAll('.section-dot-item');
+
+    // Click to scroll
+    dotItems.forEach(function(item) {
+      item.addEventListener('click', function() {
+        const id = item.getAttribute('data-section');
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    // IntersectionObserver to track active section
+    const observers = [];
+    let activeSection = null;
+
+    function setActive(id) {
+      if (activeSection === id) return;
+      activeSection = id;
+      dotItems.forEach(function(item) {
+        item.classList.toggle('active', item.getAttribute('data-section') === id);
+      });
+    }
+
+    const io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) setActive(entry.target.id);
+      });
+    }, { rootMargin: '-40% 0px -50% 0px', threshold: 0 });
+
+    sectionIds.forEach(function(id) {
+      const el = document.getElementById(id);
+      if (el) io.observe(el);
+    });
+  })();
 </script>
 
 </body>

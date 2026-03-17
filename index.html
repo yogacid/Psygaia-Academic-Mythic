@@ -500,8 +500,6 @@
 
   .mythic-block p {
     color: var(--secondary);
-    font-style: italic;
-    opacity: 0.85;
   }
 
   /* ── TWO-COLUMN LAYOUT ─────────────────────── */
@@ -620,12 +618,18 @@
 
   .motif-mythic {
     font-size: 14px;
-    font-style: italic;
     line-height: 1.65;
     color: var(--forest);
     border-top: 1px solid rgba(0,0,0,0.07);
     padding-top: 14px;
     margin-top: 14px;
+  }
+
+  /* In mythic mode, academic text above is hidden — remove the orphaned separator */
+  body.mythic-mode .motif-mythic {
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0;
   }
 
   /* ── PULLQUOTE ─────────────────────────────── */
@@ -665,7 +669,6 @@
   }
   body.mythic-mode .mythic-block p {
     color: var(--forest);
-    opacity: 1;
   }
 
   .pullquote cite {

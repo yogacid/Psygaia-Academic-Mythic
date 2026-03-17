@@ -242,22 +242,23 @@
     background: linear-gradient(135deg, var(--gold) 0%, var(--sage) 50%, var(--gold) 100%);
     background-size: 300% 100%;
     background-position: 200% center;
-    border: 1px solid var(--sage);
-    color: var(--mist);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: rgba(255,255,255,0.92);
     font-family: 'DM Mono', monospace;
     font-size: 11px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     padding: 14px 28px;
     text-decoration: none;
-    transition: background-position 0.6s ease, color 0.3s, border-color 0.3s, box-shadow 0.3s;
+    transition: background-position 0.6s ease, color 0.35s ease, border-color 0.3s, box-shadow 0.3s, transform 0.25s ease;
   }
 
   .hero-cta:hover {
     background-position: 0% center;
-    color: var(--ivory);
+    color: var(--forest);
     border-color: transparent;
-    box-shadow: 0 0 0 3px rgba(58,150,136,0.18), 0 0 24px rgba(88,168,112,0.22);
+    box-shadow: 0 0 0 3px rgba(58,150,136,0.25), 0 0 32px rgba(88,168,112,0.38);
+    transform: translateY(-2px);
   }
 
   .hero-scroll-hint {
@@ -640,6 +641,22 @@
     color: #1a3460;
   }
 
+  /* In mythic mode, mythic-block should use the blue primary (--sage), not --secondary (green) */
+  body.mythic-mode .mythic-block {
+    background: rgba(14,40,80,0.12);
+    border-left-color: var(--sage);
+  }
+  body.mythic-mode .mythic-block::before {
+    background: linear-gradient(to bottom, var(--sage) 0%, var(--mist) 50%, var(--sage) 100%);
+  }
+  body.mythic-mode .mythic-block .register-block-label {
+    color: var(--sage);
+    background: rgba(14,40,80,0.12);
+  }
+  body.mythic-mode .mythic-block p {
+    color: var(--sage);
+  }
+
   .pullquote cite {
     display: block;
     margin-top: 20px;
@@ -748,19 +765,21 @@
     background: linear-gradient(135deg, var(--gold) 0%, var(--sage) 50%, var(--gold) 100%);
     background-size: 300% 100%;
     background-position: 200% center;
-    color: var(--ivory);
+    color: rgba(255,255,255,0.92);
     font-family: 'DM Mono', monospace;
     font-size: 11px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     padding: 16px 36px;
     text-decoration: none;
-    transition: background-position 0.6s ease, box-shadow 0.3s ease;
+    transition: background-position 0.6s ease, color 0.35s ease, box-shadow 0.3s ease, transform 0.25s ease;
   }
 
   .btn-primary:hover {
     background-position: 0% center;
-    box-shadow: 0 0 0 3px rgba(58,150,136,0.2), 0 0 22px rgba(88,168,112,0.28);
+    color: var(--forest);
+    box-shadow: 0 0 0 3px rgba(58,150,136,0.28), 0 0 32px rgba(88,168,112,0.42);
+    transform: translateY(-2px);
   }
 
   /* ── CAPTION ───────────────────────────────── */
@@ -970,6 +989,99 @@
     opacity: 1;
     transform: translateX(0);
     color: var(--sage);
+  }
+
+  /* ── ORG CTA ────────────────────────────────── */
+  .org-cta {
+    background: var(--ink);
+    padding: 100px 10%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .org-cta::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 60% at 85% 20%, rgba(88,168,112,0.07) 0%, transparent 65%),
+      radial-gradient(ellipse 50% 70% at 5% 85%, rgba(58,143,160,0.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .org-cta-inner {
+    max-width: 800px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .org-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .org-eyebrow::after {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--sage);
+    opacity: 0.5;
+  }
+
+  .org-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 300;
+    color: var(--ivory);
+    line-height: 1.2;
+    margin-bottom: 28px;
+    max-width: 700px;
+  }
+
+  .org-desc {
+    font-size: 16px;
+    line-height: 1.8;
+    color: rgba(245,240,230,0.6);
+    max-width: 620px;
+    margin-bottom: 44px;
+  }
+
+  .org-buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .btn-outline-light {
+    display: inline-block;
+    border: 1px solid rgba(245,240,230,0.3);
+    color: rgba(245,240,230,0.8);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 16px 32px;
+    text-decoration: none;
+    transition: border-color 0.3s ease, color 0.3s ease, transform 0.25s ease;
+  }
+
+  .btn-outline-light:hover {
+    border-color: var(--sage);
+    color: var(--sage);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 860px) {
+    .org-buttons { flex-direction: column; align-items: flex-start; }
   }
 
 </style>
@@ -1228,6 +1340,21 @@
     </div>
   </div>
 </section>
+
+<!-- ── PSYGAIA ORG ──────────────────────────────── -->
+<div class="org-cta">
+  <div class="org-cta-inner">
+    <div class="org-eyebrow">About Psygaia</div>
+    <h3 class="org-title mode-academic">A research-led organization at the intersection of psychedelic science, systems thinking, and ecological consciousness</h3>
+    <h3 class="org-title mode-mythic">A gathering place for those who sense that healing the inner world and healing the living Earth are one movement</h3>
+    <p class="org-desc mode-academic">Psygaia brings together researchers, clinicians, and practitioners to develop rigorous frameworks for understanding the relationship between psychedelic experience and ecological consciousness — and to translate that understanding into responsible, grounded practice.</p>
+    <p class="org-desc mode-mythic">Psygaia holds the space between science and soul, between clinical research and ceremonial wisdom, between the individual journey and the collective healing the Earth requires. We exist to make this conversation possible.</p>
+    <div class="org-buttons">
+      <a href="https://psygaia.org" class="btn-primary" target="_blank" rel="noopener">Visit Psygaia.org →</a>
+      <a href="https://buy.stripe.com/bIYcMX3W893Z4o04gg" class="btn-outline-light" target="_blank" rel="noopener">Donate to Psygaia</a>
+    </div>
+  </div>
+</div>
 
 <!-- ── PRACTICE & ETHICS ────────────────────────── -->
 <section id="practice">

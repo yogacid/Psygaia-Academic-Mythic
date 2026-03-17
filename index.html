@@ -11,16 +11,18 @@
   :root {
     --forest:   #0e2018;
     --moss:     #1a3d28;
-    --sage:     #58a870;
-    --mist:     #a0cdb0;
+    --sage:     #58a870;   /* primary accent — green in academic */
+    --mist:     #a0cdb0;   /* light primary */
     --ivory:    #f3f8f5;
     --parchment:#e8f2ec;
-    --gold:     #3a9688;
+    --gold:     #3a9688;   /* dark primary */
     --amber:    #58a870;
     --earth:    #2d6b55;
     --bark:     #0e2018;
     --ink:      #0b1a10;
     --warm-gray:#6a8a76;
+    --secondary:#4a8fc8;   /* secondary accent — blue in academic, green in mythic */
+    --secondary-mist: #a0c0e8; /* light secondary */
     --mode-academic: #0e2018;
     --mode-mythic: #1a3460;
   }
@@ -42,9 +44,12 @@
   body.mythic-mode {
     --forest: #0d1f3c;
     --moss: #1a3460;
-    --sage: #4a8fc8;
-    --gold: #3a8fa0;
+    --sage: #4a8fc8;           /* primary accent — blue in mythic */
+    --mist: #a0c4e8;           /* light blue mist */
+    --gold: #3a8fa0;           /* dark blue primary */
     --amber: #6ab0c8;
+    --secondary: #58a870;      /* secondary accent — green in mythic */
+    --secondary-mist: #a0cdb0; /* light green secondary */
   }
 
   .mode-academic { display: block; }
@@ -183,8 +188,11 @@
   .hero-rule {
     width: 60px;
     height: 1px;
-    background: var(--gold);
+    background: linear-gradient(90deg, var(--gold) 0%, var(--sage) 50%, var(--secondary) 80%, var(--gold) 100%);
+    background-size: 300% 100%;
     margin-bottom: 32px;
+    transform-origin: left center;
+    animation: drawLine 1s ease both, accentShimmer 5s ease-in-out infinite 1.2s;
   }
 
   .hero-eyebrow {
@@ -209,7 +217,7 @@
 
   .hero h1 em {
     font-style: italic;
-    background: linear-gradient(135deg, #58a870 0%, #a0cdb0 35%, #3a9688 60%, #58a870 100%);
+    background: linear-gradient(135deg, var(--sage) 0%, var(--mist) 35%, var(--gold) 60%, var(--sage) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -231,11 +239,11 @@
     display: inline-flex;
     align-items: center;
     gap: 12px;
-    background: linear-gradient(135deg, #3a9688 0%, #58a870 50%, #3a9688 100%);
+    background: linear-gradient(135deg, var(--gold) 0%, var(--sage) 50%, var(--gold) 100%);
     background-size: 300% 100%;
     background-position: 200% center;
-    border: 1px solid var(--gold);
-    color: var(--gold);
+    border: 1px solid var(--sage);
+    color: var(--mist);
     font-family: 'DM Mono', monospace;
     font-size: 11px;
     letter-spacing: 0.2em;
@@ -247,9 +255,9 @@
 
   .hero-cta:hover {
     background-position: 0% center;
-    color: var(--forest);
+    color: var(--ivory);
     border-color: transparent;
-    box-shadow: 0 0 0 3px rgba(58,150,136,0.2), 0 0 20px rgba(88,168,112,0.25);
+    box-shadow: 0 0 0 3px rgba(58,150,136,0.18), 0 0 24px rgba(88,168,112,0.22);
   }
 
   .hero-scroll-hint {
@@ -331,8 +339,19 @@
     line-height: 1.45;
     color: var(--forest);
     max-width: 860px;
-    border-left: 3px solid var(--gold);
+    border-left: 3px solid var(--sage);
     padding-left: 36px;
+    position: relative;
+  }
+
+  .intro-statement blockquote::before {
+    content: '';
+    position: absolute;
+    left: -3px; top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, var(--gold) 0%, var(--sage) 40%, var(--secondary) 70%, var(--gold) 100%);
+    background-size: 100% 300%;
+    animation: accentShimmerV 6s ease-in-out infinite;
   }
 
   /* ── SECTION BASE ──────────────────────────── */
@@ -409,8 +428,20 @@
 
   .academic-block {
     background: rgba(27,58,44,0.06);
-    border-left: 3px solid var(--forest);
+    border-left: 3px solid var(--earth);
     padding: 28px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .academic-block::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, var(--earth) 0%, var(--sage) 50%, var(--earth) 100%);
+    background-size: 100% 300%;
+    animation: accentShimmerV 5s ease-in-out infinite;
   }
 
   .academic-block .register-block-label {
@@ -422,12 +453,25 @@
 
   .mythic-block {
     background: rgba(26,52,96,0.06);
-    border-left: 3px solid #3a6eb5;
+    border-left: 3px solid var(--secondary);
     padding: 28px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mythic-block::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, var(--secondary) 0%, var(--secondary-mist) 50%, var(--secondary) 100%);
+    background-size: 100% 300%;
+    animation: accentShimmerV 5s ease-in-out infinite;
+    animation-delay: -2.5s;
   }
 
   .mythic-block .register-block-label {
-    color: #2a4f8a;
+    color: var(--secondary);
     background: rgba(26,52,96,0.08);
     margin: -28px -32px 20px;
     display: block;
@@ -444,8 +488,9 @@
   }
 
   .mythic-block p {
-    color: #1a3460;
+    color: var(--secondary);
     font-style: italic;
+    opacity: 0.85;
   }
 
   /* ── TWO-COLUMN LAYOUT ─────────────────────── */
@@ -467,10 +512,23 @@
   .framework-card {
     padding: 36px;
     background: var(--ivory);
-    border-top: 3px solid var(--gold);
+    border-top: none;
     position: relative;
     transition: box-shadow 0.25s ease, transform 0.25s ease;
   }
+
+  .framework-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold) 0%, var(--sage) 50%, var(--secondary) 75%, var(--gold) 100%);
+    background-size: 300% 100%;
+    animation: accentShimmer 6s ease-in-out infinite;
+  }
+
+  .framework-card:nth-child(2)::before { animation-delay: -2s; }
+  .framework-card:nth-child(3)::before { animation-delay: -4s; }
 
   .framework-card:hover {
     transform: translateY(-3px);
@@ -563,8 +621,9 @@
   .pullquote {
     margin: 60px 0;
     padding: 48px 0;
-    border-top: 1px solid rgba(0,0,0,0.1);
-    border-bottom: 1px solid rgba(0,0,0,0.1);
+    border-top: 1px solid var(--gold);
+    border-bottom: 1px solid var(--gold);
+    animation: accentBorderPulse 6s ease-in-out infinite;
   }
 
   .pullquote blockquote {
@@ -634,6 +693,19 @@
     border-left: 3px solid var(--earth);
     padding: 28px 32px;
     margin: 40px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ethics-box::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, var(--earth) 0%, var(--sage) 50%, var(--earth) 100%);
+    background-size: 100% 300%;
+    animation: accentShimmerV 7s ease-in-out infinite;
+    animation-delay: -1s;
   }
 
   .ethics-box p {
@@ -673,10 +745,10 @@
 
   .btn-primary {
     display: inline-block;
-    background: linear-gradient(135deg, #3a9688 0%, #58a870 50%, #3a9688 100%);
+    background: linear-gradient(135deg, var(--gold) 0%, var(--sage) 50%, var(--gold) 100%);
     background-size: 300% 100%;
     background-position: 200% center;
-    color: var(--forest);
+    color: var(--ivory);
     font-family: 'DM Mono', monospace;
     font-size: 11px;
     letter-spacing: 0.2em;
@@ -688,7 +760,7 @@
 
   .btn-primary:hover {
     background-position: 0% center;
-    box-shadow: 0 0 0 3px rgba(58,150,136,0.2), 0 0 22px rgba(88,168,112,0.3);
+    box-shadow: 0 0 0 3px rgba(58,150,136,0.2), 0 0 22px rgba(88,168,112,0.28);
   }
 
   /* ── CAPTION ───────────────────────────────── */
@@ -761,7 +833,7 @@
 
   .btn-ghost:hover {
     border-color: var(--sage);
-    background: linear-gradient(135deg, #58a870 0%, #a0cdb0 40%, #3a9688 70%, #58a870 100%);
+    background: linear-gradient(135deg, var(--sage) 0%, var(--mist) 40%, var(--gold) 70%, var(--sage) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -801,6 +873,22 @@
     0%   { background-position: 0% center; }
     50%  { background-position: 100% center; }
     100% { background-position: 0% center; }
+  }
+
+  @keyframes accentShimmerV {
+    0%   { background-position: 0% 0%; }
+    50%  { background-position: 0% 100%; }
+    100% { background-position: 0% 0%; }
+  }
+
+  @keyframes drawLine {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
+
+  @keyframes accentBorderPulse {
+    0%, 100% { border-color: var(--gold); }
+    50%       { border-color: var(--sage); }
   }
 
   /* ── THESIS BADGE ──────────────────────────── */
@@ -878,13 +966,9 @@
     pointer-events: none;
   }
 
-  .section-dot-item:hover .section-dot-label,
-  .section-dot-item.active .section-dot-label {
+  .section-dot-item:hover .section-dot-label {
     opacity: 1;
     transform: translateX(0);
-  }
-
-  .section-dot-item.active .section-dot-label {
     color: var(--sage);
   }
 
@@ -962,7 +1046,7 @@
     <blockquote>Life has always been communicating. Modernity severed our capacity to listen. Psychedelics reopen the channel — not by adding something foreign, but by dissolving the noise that separates us from a conversation we were always part of.</blockquote>
   </div>
   <div class="thesis-badge">
-    📄 Grounded in peer-reviewed research &amp; interdisciplinary thesis — University of Ottawa, 2025 &nbsp;·&nbsp; <a href="#">Read the full paper →</a>
+    📄 Grounded in peer-reviewed research &amp; interdisciplinary thesis — University of Ottawa, 2025
   </div>
 </div>
 

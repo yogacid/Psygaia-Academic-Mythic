@@ -77,11 +77,19 @@
   }
 
   .toggle-bar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     font-family: 'Cormorant Garamond', serif;
     font-size: 15px;
     letter-spacing: 0.25em;
     text-transform: uppercase;
     color: rgba(255,255,255,0.6);
+  }
+
+  .toggle-bar-logo {
+    height: 32px;
+    width: auto;
   }
 
   .toggle-control {
@@ -774,7 +782,7 @@
 
 <!-- ── STICKY TOGGLE BAR ───────────────────────── -->
 <div class="toggle-bar" id="toggleBar">
-  <span class="toggle-bar-brand">Psygaia · Research</span>
+  <span class="toggle-bar-brand"><img src="logo.png" alt="Psygaia" class="toggle-bar-logo">Psygaia · Research</span>
   <div class="toggle-control">
     <span class="toggle-label active" id="labelAcademic">Academic</span>
     <div class="toggle-switch" id="toggleSwitch" onclick="toggleMode()" role="switch" aria-checked="false" tabindex="0"></div>

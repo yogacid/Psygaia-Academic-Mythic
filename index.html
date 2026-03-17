@@ -209,7 +209,12 @@
 
   .hero h1 em {
     font-style: italic;
-    color: var(--amber);
+    background: linear-gradient(135deg, #58a870 0%, #a0cdb0 35%, #3a9688 60%, #58a870 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 300% auto;
+    animation: accentShimmer 5s ease-in-out infinite;
   }
 
   .hero-subtitle {
@@ -239,8 +244,12 @@
   }
 
   .hero-cta:hover {
-    background: var(--gold);
+    background: linear-gradient(135deg, #3a9688 0%, #58a870 50%, #3a9688 100%);
+    background-size: 300% 100%;
     color: var(--forest);
+    border-color: transparent;
+    animation: accentShimmer 4s ease-in-out infinite;
+    box-shadow: 0 0 0 3px rgba(58,150,136,0.2), 0 0 20px rgba(88,168,112,0.25);
   }
 
   .hero-scroll-hint {
@@ -284,14 +293,28 @@
     color: var(--warm-gray);
     text-decoration: none;
     padding: 18px 20px;
-    border-bottom: 2px solid transparent;
-    transition: all 0.2s;
+    position: relative;
+    transition: color 0.2s;
     white-space: nowrap;
   }
 
+  .toc-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 20px; right: 20px;
+    height: 2px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.22s ease;
+  }
+
   .toc-link:hover {
-    color: var(--forest);
-    border-bottom-color: var(--gold);
+    color: var(--ink);
+  }
+
+  .toc-link:hover::after {
+    transform: scaleX(1);
   }
 
   /* ── INTRO STATEMENT ───────────────────────── */
@@ -446,6 +469,12 @@
     background: var(--ivory);
     border-top: 3px solid var(--gold);
     position: relative;
+    transition: box-shadow 0.25s ease, transform 0.25s ease;
+  }
+
+  .framework-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px rgba(58,150,136,0.12);
   }
 
   .framework-num {
@@ -492,6 +521,11 @@
   .motif-card {
     background: var(--ivory);
     padding: 40px 32px;
+    transition: background 0.25s ease;
+  }
+
+  .motif-card:hover {
+    background: rgba(88,168,112,0.06);
   }
 
   .motif-icon {
@@ -639,7 +673,9 @@
 
   .btn-primary {
     display: inline-block;
-    background: var(--gold);
+    background: linear-gradient(135deg, #3a9688 0%, #58a870 50%, #3a9688 100%);
+    background-size: 300% 100%;
+    background-position: 0% center;
     color: var(--forest);
     font-family: 'DM Mono', monospace;
     font-size: 11px;
@@ -647,12 +683,12 @@
     text-transform: uppercase;
     padding: 16px 36px;
     text-decoration: none;
-    transition: all 0.3s;
+    transition: box-shadow 0.25s ease;
   }
 
   .btn-primary:hover {
-    background: var(--amber);
-    transform: translateY(-2px);
+    animation: accentShimmer 4s ease-in-out infinite;
+    box-shadow: 0 0 0 3px rgba(58,150,136,0.2), 0 0 22px rgba(88,168,112,0.3);
   }
 
   /* ── CAPTION ───────────────────────────────── */
@@ -724,8 +760,13 @@
   }
 
   .btn-ghost:hover {
-    border-color: var(--amber);
-    color: var(--amber);
+    border-color: var(--sage);
+    background: linear-gradient(135deg, #58a870 0%, #a0cdb0 40%, #3a9688 70%, #58a870 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 300% auto;
+    animation: accentShimmer 4s ease-in-out infinite;
   }
 
   /* ── RESPONSIVE ────────────────────────────── */
@@ -753,6 +794,13 @@
   .register-block, .toggle-bar, .pullquote blockquote,
   .framework-title, .section-lead {
     transition: all 0.5s ease;
+  }
+
+  /* ── ACCENT SHIMMER ────────────────────────── */
+  @keyframes accentShimmer {
+    0%   { background-position: 0% center; }
+    50%  { background-position: 100% center; }
+    100% { background-position: 0% center; }
   }
 
   /* ── THESIS BADGE ──────────────────────────── */

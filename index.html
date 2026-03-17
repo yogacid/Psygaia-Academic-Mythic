@@ -95,6 +95,16 @@
   .toggle-bar-logo {
     height: 32px;
     width: auto;
+    display: block;
+    transition: opacity 0.2s ease;
+  }
+
+  a.toggle-bar-brand {
+    text-decoration: none;
+  }
+
+  a.toggle-bar-brand:hover .toggle-bar-logo {
+    opacity: 0.8;
   }
 
   .toggle-control {
@@ -612,7 +622,7 @@
     font-size: 14px;
     font-style: italic;
     line-height: 1.65;
-    color: #7a4a70;
+    color: var(--forest);
     border-top: 1px solid rgba(0,0,0,0.07);
     padding-top: 14px;
     margin-top: 14px;
@@ -654,7 +664,8 @@
     background: rgba(14,40,80,0.12);
   }
   body.mythic-mode .mythic-block p {
-    color: var(--sage);
+    color: var(--forest);
+    opacity: 1;
   }
 
   .pullquote cite {
@@ -1118,7 +1129,7 @@
 
 <!-- ── STICKY TOGGLE BAR ───────────────────────── -->
 <div class="toggle-bar" id="toggleBar">
-  <span class="toggle-bar-brand"><img src="logo.png" alt="Psygaia" class="toggle-bar-logo"></span>
+  <a href="https://psygaia.org" class="toggle-bar-brand" target="_blank" rel="noopener"><img src="logo.png" alt="Psygaia" class="toggle-bar-logo"></a>
   <div class="toggle-control">
     <span class="toggle-label active" id="labelAcademic">Academic</span>
     <div class="toggle-switch" id="toggleSwitch" onclick="toggleMode()" role="switch" aria-checked="false" tabindex="0"></div>
